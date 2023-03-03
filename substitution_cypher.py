@@ -19,7 +19,7 @@ SIAA ZQ LKBA. VA ZOA RFPBLUAOAR!
 
 
 
-def reverse_dict(my_dict):
+def reverse_dict(my_dict:dict)->dict:
     my_reversed_dict={}
     for letter in my_dict.items():
         
@@ -28,7 +28,7 @@ def reverse_dict(my_dict):
 
 
 
-def key_prep(text):
+def key_prep(text:str)->dict:
     text=text.upper()
     words=[]
     key_dict={}
@@ -42,46 +42,65 @@ def key_prep(text):
         for letter in new_word:
             key_dict.setdefault(letter,alphabet[i])
             i=len(key_dict.keys())
+        
     
 
-    i=len(key_dict.keys())-1
-
     for letter in alphabet:
-        key_dict.setdefault(letter, alphabet[i])
-        i+=1
-        
+        if not key_dict.get(letter, False):
+            key_dict.setdefault(letter, alphabet[i])
+            i+=1
+ 
     return key_dict
 
-def mess_prep(text):
-    pass
+def mess_prep(text:str,key:dict)->list:
+    text=text.upper()
+    words=[]
+    
+    new_words=[]
+    i=0
+    words=text.split()
+    for word in words:
+       new_word=''
+       for letter in word:
+            
+            if letter.isalpha():
+                new_letter=key[letter]
+            else:
+                new_letter=letter
+            
+            new_word+=new_letter
 
-def encoded(mess,key):
-    key_dict=reverse_dict(key_prep(key))
+        
+       new_words.append(new_word)
 
-def decoded(mess,key):
-    key_dict=key_prep(key)
+
+    return new_words
+
+    
+
+def encode_decode(mess,key,toggle):
+    if toggle:
+        key_dict=reverse_dict(key_prep(key))
+    else:
+        key_dict=key_prep(key)
+
+    return " ".join(mess_prep(mess,key_dict))
 
 
 def main():
    global alphabet
    alphabet=["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X","Y", "Z"]
-   encode_decode=input("do you want to encode or decode? E/D")
+   switch=input("do you want to encode or decode? E/D")
+   message=input("Your message please: ")
+   key=input("the key:")
 
-   if encode_decode.upper()=="E":
-       message_to_be_encoded=input("Your message to be encoded please: ")
-       key_to_encode=input("the key to encode with:")
-       print(encoded(message_to_be_encoded,key_to_encode))
-   elif encode_decode.upper()=="D":
-        message_to_be_decoded=input("Your message to be decoded please: ")
-        key_to_decode=input("the key to decode with:")
-        print(decoded(message_to_be_decoded,key_to_decode))
+   if switch.upper()=="E":
+       print(encode_decode(message,key,True))
+   elif switch.upper()=="D":
+       print(encode_decode(message,key,False))
        
 
-
-
-
-
-       
+      
 
 if __name__=="__main__":
     main()
